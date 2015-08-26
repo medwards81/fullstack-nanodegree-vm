@@ -18,13 +18,13 @@ DROP TYPE IF EXISTS result_of_match;
 CREATE DATABASE tournament;
 
 CREATE TABLE player (
-	player_id		serial		primary key	not null,
-	name			text		not null,
+	player_id		serial			primary key	not null,
+	name			text			not null,
 	date_added		timestamp
 );
 
 CREATE TABLE tournament_details (
-	tournament_id	serial		primary key	not null,
+	tournament_id	serial primary key not null,
 	num_rounds		smallint,
 	start_date		timestamp,
 	end_date		timestamp	
@@ -33,13 +33,13 @@ CREATE TABLE tournament_details (
 CREATE TYPE result_of_match AS ENUM('win', 'lose', 'draw');
 
 CREATE TABLE match (
-	tournament_id	int			references tournament_details(tournament_id) 	not null,
-	player_1_id		int			references player(player_id),
-	player_2_id		int			references player(player_id),
+	tournament_id	int						references tournament_details(tournament_id)	not null,
+	player_1_id		int						references player(player_id),
+	player_2_id		int						references player(player_id),
 	start_date		timestamp,
 	end_date		timestamp,
 	round_num		smallint,
-	is_completed	boolean		default false,
+	is_completed	boolean	default false,
 	match_result	result_of_match
 );
 

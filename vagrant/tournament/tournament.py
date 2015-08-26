@@ -13,21 +13,14 @@ def connect():
 
 def deleteMatches():
     """Remove all the match records from the database."""
-    con = connect()
-    cur = con.cursor()
-    cur.execute("DELETE FROM match")
-    con.commit()
-    con.close()
+    query = "DELETE FROM match"
+    _execute_query(query)
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
-    con = connect()
-    cur = con.cursor()
-    cur.execute("DELETE FROM player")
-    con.commit()
-    con.close()
-
+    query = "DELETE FROM player"
+    _execute_query(query)
 
 def countPlayers():
     """Returns the number of players currently registered."""
@@ -83,5 +76,14 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
+    
+def _execute_query(query):
+    """Executes the provided query against the database"""
+    
+    con = connect()
+    cur = con.cursor()
+    cur.execute(query)
+    con.commit()
+    con.close()
 
 

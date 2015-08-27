@@ -24,6 +24,14 @@ def deletePlayers():
 
 def countPlayers():
     """Returns the number of players currently registered."""
+    query = "SELECT COUNT(player_id) AS player_count FROM player"
+    con = connect()
+    cur = con.cursor()
+    cur.execute(query)
+    con.commit()
+    count = cur.fetchone()[0];
+    con.close()
+    return count
 
 
 def registerPlayer(name):
@@ -35,6 +43,12 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
+    query = "INSERT INTO player(name) values(%s)"
+    con = connect()
+    cur = con.cursor()
+    cur.execute(query, (name,))
+    con.commit()
+    con.close()
 
 
 def playerStandings():
@@ -78,8 +92,7 @@ def swissPairings():
     """
     
 def _execute_query(query):
-    """Executes the provided query against the database"""
-    
+    """Executes the provided query against the database""" 
     con = connect()
     cur = con.cursor()
     cur.execute(query)

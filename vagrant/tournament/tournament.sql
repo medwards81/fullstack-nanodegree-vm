@@ -33,9 +33,11 @@ CREATE TABLE tournament_details (
 CREATE TYPE result_of_match AS ENUM('win', 'lose', 'draw');
 
 CREATE TABLE match (
-	tournament_id	int						references tournament_details(tournament_id)	not null,
+	match_id		serial primary key not null,
+	tournament_id	int						references tournament_details(tournament_id),
 	player_1_id		int						references player(player_id),
 	player_2_id		int						references player(player_id),
+	winner_id		int						references player(player_id),
 	start_date		timestamp without time zone,
 	end_date		timestamp without time zone,
 	round_num		smallint,

@@ -11,21 +11,21 @@ def connect():
     return psycopg2.connect("dbname=tournament")
 
 
-def deleteMatches():
+def deleteMatches(tournament_id):
     """Remove all the match records from the database."""
-    query = "DELETE FROM match"
+    query = "DELETE FROM matches WHERE tournament_id = %s;" % (tournament_id)
     _delete(query)
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
-    query = "DELETE FROM player"
+    query = "DELETE FROM players;"
     _delete(query)
 
 
 def countPlayers():
     """Returns the number of players currently registered."""
-    query = "SELECT COUNT(player_id) AS player_count FROM player"
+    query = "SELECT COUNT(player_id) AS player_count FROM players;"
     player_count = _count(query)
     return player_count
 
@@ -39,7 +39,7 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
-    query = "INSERT INTO player(name) values(%s)"
+    query = "INSERT INTO players(name) values(%s);"
     con = connect()
     cur = con.cursor()
     cur.execute(query, (name,))
@@ -64,7 +64,7 @@ def playerStandings():
     con = connect()
     cur = con.cursor()
 
-    query = "SELECT player_id, name from player"    
+    query = "SELECT player_id, name from players;"    
     cur.execute(query)
     con.commit()
     
@@ -110,7 +110,7 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
-    query = "INSERT INTO match(player_1_id, player_2_id, winner_id) values(%s, %s, %s)"
+    query = "INSERT INTO matches(player_1_id, player_2_id, winner_id) values(%s, %s, %s);"
     con = connect()
     cur = con.cursor()
     cur.execute(query, (winner,loser,winner,))
@@ -138,8 +138,7 @@ def swissPairings():
 
     for i in range(0, len(standings), 2):
         (id1, name1, id2, name2) = (standings[i][0], standings[i][1],
-                                    standings[i+1][0], standings[i+1][1]
-                                   )
+                                    standings[i+1][0], standings[i+1][1])
         pairings.append((id1, name1, id2, name2))
 
     return pairings
@@ -166,13 +165,13 @@ def _count(query):
 
 
 def _get_wins(player_id):
-    query = "SELECT COUNT(winner_id) FROM match where winner_id = %s" % player_id
+    query = "SELECT COUNT(winner_id) FROM matches where winner_id = %s" % player_id
     wins = _count(query)
     return wins
 
 
 def _get_total_matches(player_id):
-    query = "SELECT COUNT(match_id) FROM match where player_1_id = %s OR player_2_id = %s" % (player_id, player_id)
+    query = "SELECT COUNT(match_id) FROM matches where player_1_id = %s OR player_2_id = %s" % (player_id, player_id)
     total_matches = _count(query)
     return total_matches
 

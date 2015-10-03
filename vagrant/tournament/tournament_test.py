@@ -4,8 +4,10 @@
 
 from tournament import *
 
+tournament_id = 1;
+
 def testDeleteMatches():
-    deleteMatches()
+    deleteMatches(tournament_id)
     print "1. Old matches can be deleted."
 
 

@@ -8,14 +8,14 @@
 
 -- Delete the database and its contents
 DROP DATABASE IF EXISTS tournament;
-DROP TABLE IF EXISTS players CASCADE;
-DROP TABLE IF EXISTS tournament_details CASCADE;
-DROP TABLE IF EXISTS matches CASCADE;
-DROP TYPE IF EXISTS result_of_match CASCADE;
 
 
 -- Begin database and table creation
 CREATE DATABASE tournament;
+
+
+-- connect to the db so we can interact with it
+\c tournament;
 
 
 CREATE TABLE players (
@@ -48,7 +48,3 @@ CREATE TABLE matches (
 	is_completed		boolean	default false,
 	match_result		result_of_match
 );
-
-
--- connect to the db so we can interact with it
-\c tournament;

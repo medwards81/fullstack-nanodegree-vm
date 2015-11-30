@@ -1,51 +1,149 @@
-from flask import Flask
+from flask import Flask, render_template, request, redirect, jsonify, url_for
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Restaurant, MenuItem
+from database_setup import Base, Genre, Movie
 
 app = Flask(__name__)
 
-engine = create_engine('sqlite:///restaurantmenu.db')
+engine = create_engine('sqlite:///catalog.db')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
+# JSON endpoints
+@app.route('/movie/JSON')
+def moviesJSON():
+    movies = session.query(Movie).all()
+    return jsonify(movies=[m.serialize for m in movies])
+
+
+# Show all genres
 @app.route('/')
-@app.route('/restaurants/<int:restaurant_id>/')
-def restaurantMenu(restaurant_id):
-    restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
-    items = session.query(MenuItem).filter_by(restaurant_id=restaurant.id)
-    output = ''
-    for i in items:
-        output += i.name
-        output += '</br>'
-        output += i.price
-        output += '</br>'
-        output += i.description
-        output += '</br>'
-        output += '</br>'
-    return output
-
-# Task 1: Create route for newMenuItem function here
+@app.route('/genre/')
+def showGenres():
+    genres = session.query(Genre).all()
+    return render_template('genres.html', genres=genres)
 
 
-def newMenuItem(restaurant_id):
-    return "page to create a new menu item. Task 1 complete!"
+# Create a new genre
+@app.route('/genre/new/', methods=['GET', 'POST'])
+def newGenre():
+    if request.method == 'POST':
+        newGenre = Genre(name=request.form['name'])
+        session.add(newGenre)
+        session.commit()
+        return redirect(url_for('showGenres'))
+    else:
+        return render_template('newGenre.html')
 
-# Task 2: Create route for editMenuItem function here
+
+# Edit a genre
+@app.route('/genre/<int:genre_id>/edit/', methods=['GET', 'POST'])
+def editGenre(genre_id):
+    editedGenre = session.query(
+        Genre).filter_by(id=genre_id).one()
+    if request.method == 'POST':
+        if request.form['name']:
+            editedGenre.name = request.form['name']
+            return redirect(url_for('showGenres'))
+    else:
+        return render_template(
+            'editGenre.html', genre=editedGenre)
+
+    # return 'This page will be for editing genre %s' % genre_id
+
+# Delete a genre
 
 
-def editMenuItem(restaurant_id, menu_id):
-    return "page to edit a menu item. Task 2 complete!"
+@app.route('/genre/<int:genre_id>/delete/', methods=['GET', 'POST'])
+def deleteGenre(genre_id):
+    genreToDelete = session.query(
+        Genre).filter_by(id=genre_id).one()
+    if request.method == 'POST':
+        session.delete(genreToDelete)
+        session.commit()
+        return redirect(
+            url_for('showGenres', genre_id=genre_id))
+    else:
+        return render_template(
+            'deleteGenre.html', genre=genreToDelete)
+    # return 'This page will be for deleting genre %s' % genre_id
 
-# Task 3: Create a route for deleteMenuItem function here
+
+# Show a genre menu
+@app.route('/genre/<int:genre_id>/')
+@app.route('/genre/<int:genre_id>/menu/')
+def showMenu(genre_id):
+    genre = session.query(Genre).filter_by(id=genre_id).one()
+    items = session.query(Movie).filter_by(
+        genre_id=genre_id).all()
+    return render_template('menu.html', items=items, genre=genre)
+    # return 'This page is the menu for genre %s' % genre_id
+
+# Create a new menu item
 
 
-def deleteMenuItem(restaurant_id, menu_id):
-    return "page to delete a menu item. Task 3 complete!"
+@app.route(
+    '/genre/<int:genre_id>/menu/new/', methods=['GET', 'POST'])
+def newMovie(genre_id):
+    if request.method == 'POST':
+        newItem = Movie(name=request.form['name'], description=request.form[
+                           'description'], price=request.form['price'], course=request.form['course'], genre_id=genre_id)
+        session.add(newItem)
+        session.commit()
+
+        return redirect(url_for('showMenu', genre_id=genre_id))
+    else:
+        return render_template('newmenuitem.html', genre_id=genre_id)
+
+    return render_template('newMovie.html', genre=genre)
+    # return 'This page is for making a new menu item for genre %s'
+    # %genre_id
+
+# Edit a menu item
+
+
+@app.route('/genre/<int:genre_id>/menu/<int:menu_id>/edit',
+           methods=['GET', 'POST'])
+def editMovie(genre_id, menu_id):
+    editedItem = session.query(Movie).filter_by(id=menu_id).one()
+    if request.method == 'POST':
+        if request.form['name']:
+            editedItem.name = request.form['name']
+        if request.form['description']:
+            editedItem.description = request.form['name']
+        if request.form['price']:
+            editedItem.price = request.form['price']
+        if request.form['course']:
+            editedItem.course = request.form['course']
+        session.add(editedItem)
+        session.commit()
+        return redirect(url_for('showMenu', genre_id=genre_id))
+    else:
+
+        return render_template(
+            'editmenuitem.html', genre_id=genre_id, menu_id=menu_id, item=editedItem)
+
+    # return 'This page is for editing menu item %s' % menu_id
+
+# Delete a menu item
+
+
+@app.route('/genre/<int:genre_id>/menu/<int:menu_id>/delete',
+           methods=['GET', 'POST'])
+def deleteMovie(genre_id, menu_id):
+    itemToDelete = session.query(Movie).filter_by(id=menu_id).one()
+    if request.method == 'POST':
+        session.delete(itemToDelete)
+        session.commit()
+        return redirect(url_for('showMenu', genre_id=genre_id))
+    else:
+        return render_template('deleteMovie.html', item=itemToDelete)
+    # return "This page is for deleting menu item %s" % menu_id
+
 
 if __name__ == '__main__':
     app.debug = True
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=8000)

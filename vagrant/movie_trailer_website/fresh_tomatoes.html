@@ -1,0 +1,175 @@
+
+<head>
+    <meta charset="utf-8">
+    <title>Fresh Tomatoes!</title>
+
+    <!-- Bootstrap 3 -->
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    <style type="text/css" media="screen">
+        body {
+            padding-top: 80px;
+        }
+        #trailer .modal-dialog {
+            margin-top: 200px;
+            width: 640px;
+            height: 480px;
+        }
+        .hanging-close {
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            z-index: 9001;
+        }
+        #trailer-video {
+            width: 100%;
+            height: 100%;
+        }
+        .movie-tile {
+            margin-bottom: 20px;
+            padding-top: 20px;
+        }
+        .movie-tile:hover {
+            background-color: #EEE;
+            cursor: pointer;
+        }
+        .scale-media {
+            padding-bottom: 56.25%;
+            position: relative;
+        }
+        .scale-media iframe {
+            border: none;
+            height: 100%;
+            position: absolute;
+            width: 100%;
+            left: 0;
+            top: 0;
+            background-color: white;
+        }
+        .popover {
+            width: 300px;
+        }
+    </style>
+    <script type="text/javascript" charset="utf-8">
+        // Pause the video when the modal is closed
+        $(document).on('click', '.hanging-close, .modal-backdrop, .modal', function (event) {
+            // Remove the src so the player itself gets removed, as this is the only
+            // reliable way to ensure the video stops playing in IE
+            $("#trailer-video-container").empty();
+        });
+        // Start playing the video whenever the trailer modal is opened
+        $(document).on('click', '.movie-tile', function (event) {
+            var trailerYouTubeId = $(this).attr('data-trailer-youtube-id')
+            var sourceUrl = 'http://www.youtube.com/embed/' + trailerYouTubeId + '?autoplay=1&html5=1';
+            $("#trailer-video-container").empty().append($("<iframe></iframe>", {
+              'id': 'trailer-video',
+              'type': 'text-html',
+              'src': sourceUrl,
+              'frameborder': 0
+            }));
+        });  
+        $(document).ready(function () {
+          // Animate in the movies when the page loads
+          $('.movie-tile').hide().first().show("fast", function showNext() {
+            $(this).next("div").show("fast", showNext);
+          });
+
+          // setup the popover functionality for the movie info link-button
+          $('a[rel=popover]').popover();
+        });
+    </script>
+</head>
+
+<!DOCTYPE html>
+<html lang="en">
+  <body>
+    <!-- Trailer Video Modal -->
+    <div class="modal" id="trailer">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <a href="#" class="hanging-close" data-dismiss="modal" aria-hidden="true">
+            <img src="https://lh5.ggpht.com/v4-628SilF0HtHuHdu5EzxD7WRqOrrTIDi_MhEG6_qkNtUK5Wg7KPkofp_VJoF7RS2LhxwEFCO1ICHZlc-o_=s0#w=24&h=24"/>
+          </a>
+          <div class="scale-media" id="trailer-video-container">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Page Content -->
+    <div class="container">
+      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">Fresh Tomatoes Movie Trailers</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      
+<div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="Je3jfepymQM" data-toggle="modal" data-target="#trailer">
+    <img src="http://ia.media-imdb.com/images/M/MV5BMTM4NjU1ODY2Nl5BMl5BanBnXkFtZTcwNzI3NDgyMQ@@._V1_SX300.jpg" width="220" height="342">
+    <h2>Ernest Goes to Camp</h2>
+    <div class="year">1987</div>
+    <div class="runtime">92 min</div>
+    <div class="rating">Rated PG</div>
+    <!-- Plot Popover -->
+    <div class="more-info"><a id="popoverData" class="btn" href="#" data-content="A group of juvenile criminals is sent for vacation to Kamp Kikakee. The clumsy Ernest has to care for them, although he doesn't even know how to take care of himself. The other children at ..." rel="popover" data-placement="top" data-original-title="Ernest Goes to Camp" data-trigger="hover">Plot Info</a></div>
+    </div>
+
+<div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="hJ2j4oWdQtU" data-toggle="modal" data-target="#trailer">
+    <img src="http://ia.media-imdb.com/images/M/MV5BMTEyMzM3NDQyMjJeQTJeQWpwZ15BbWU4MDE4ODY0NjEx._V1_SX300.jpg" width="220" height="342">
+    <h2>The Goonies</h2>
+    <div class="year">1985</div>
+    <div class="runtime">114 min</div>
+    <div class="rating">Rated PG</div>
+    <!-- Plot Popover -->
+    <div class="more-info"><a id="popoverData" class="btn" href="#" data-content="In order to save their home from foreclosure, a group of misfits set out to find a pirate's ancient treasure." rel="popover" data-placement="top" data-original-title="The Goonies" data-trigger="hover">Plot Info</a></div>
+    </div>
+
+<div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="n7JhKCQnEqQ" data-toggle="modal" data-target="#trailer">
+    <img src="http://ia.media-imdb.com/images/M/MV5BMTkyNjE3MjM2MV5BMl5BanBnXkFtZTYwMzY5ODk4._V1_SX300.jpg" width="220" height="342">
+    <h2>The Karate Kid</h2>
+    <div class="year">1984</div>
+    <div class="runtime">126 min</div>
+    <div class="rating">Rated PG</div>
+    <!-- Plot Popover -->
+    <div class="more-info"><a id="popoverData" class="btn" href="#" data-content="A handyman/martial arts master agrees to teach a bullied boy karate and shows him that there is more to the martial art than fighting." rel="popover" data-placement="top" data-original-title="The Karate Kid" data-trigger="hover">Plot Info</a></div>
+    </div>
+
+<div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="4NT4C1F_HZE" data-toggle="modal" data-target="#trailer">
+    <img src="http://ia.media-imdb.com/images/M/MV5BMTQ3NTU4NzY5Ml5BMl5BanBnXkFtZTcwNDk0ODUyMQ@@._V1_SX300.jpg" width="220" height="342">
+    <h2>Police Academy</h2>
+    <div class="year">1984</div>
+    <div class="runtime">96 min</div>
+    <div class="rating">Rated R</div>
+    <!-- Plot Popover -->
+    <div class="more-info"><a id="popoverData" class="btn" href="#" data-content="A group of good-hearted but incompetent misfits enter the police academy, but the instructors there are not going to put up with their pranks." rel="popover" data-placement="top" data-original-title="Police Academy" data-trigger="hover">Plot Info</a></div>
+    </div>
+
+<div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="Hw6zrInbtQE" data-toggle="modal" data-target="#trailer">
+    <img src="http://ia.media-imdb.com/images/M/MV5BODU1NzM4NTA4Nl5BMl5BanBnXkFtZTgwMTkxMzcxMTE@._V1_SX300.jpg" width="220" height="342">
+    <h2>Revenge of the Nerds</h2>
+    <div class="year">1984</div>
+    <div class="runtime">90 min</div>
+    <div class="rating">Rated R</div>
+    <!-- Plot Popover -->
+    <div class="more-info"><a id="popoverData" class="btn" href="#" data-content="At a big campus, a group of bullied outcasts and misfits resolve to fight back for their peace and self respect." rel="popover" data-placement="top" data-original-title="Revenge of the Nerds" data-trigger="hover">Plot Info</a></div>
+    </div>
+
+<div class="col-md-6 col-lg-4 movie-tile text-center" data-trailer-youtube-id="P6htehZchW0" data-toggle="modal" data-target="#trailer">
+    <img src="http://ia.media-imdb.com/images/M/MV5BMTU2OTkxMTg0OV5BMl5BanBnXkFtZTcwMjkzMTM3NA@@._V1_SX300.jpg" width="220" height="342">
+    <h2>Teen Wolf</h2>
+    <div class="year">1985</div>
+    <div class="runtime">91 min</div>
+    <div class="rating">Rated PG</div>
+    <!-- Plot Popover -->
+    <div class="more-info"><a id="popoverData" class="btn" href="#" data-content="A struggling high school student with problems discovers that his family has an unusual pedigree when he finds himself turning into a werewolf." rel="popover" data-placement="top" data-original-title="Teen Wolf" data-trigger="hover">Plot Info</a></div>
+    </div>
+
+    </div>
+  </body>
+</html>
